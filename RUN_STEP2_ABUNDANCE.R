@@ -1,1 +1,1 @@
-source("03_build_finsync_abundance_covariates.R")
+source("03_build_abundance_covariates_from_filteredFish.R")
