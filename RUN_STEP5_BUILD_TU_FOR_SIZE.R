@@ -1,0 +1,6 @@
+source("05_build_TU_for_fish_size_events.R")
+cat("Step 5 outputs:\n")
+cat("- output/data/chem_means_for_size_events_YYYYMMDD.csv\n")
+cat("- output/data/event_TU_for_size_events_YYYYMMDD.csv\n")
+cat("- output/data/modeldata_Q1Q2_event_TU_SIZE_YYYYMMDD.csv\n")
+cat("- output/results/TU_size_event_QC_YYYYMMDD.txt\n")
