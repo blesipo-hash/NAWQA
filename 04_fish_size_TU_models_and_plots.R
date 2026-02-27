@@ -246,12 +246,24 @@ make_gam_pred_df <- function(m_gam, dat, grid_n = 200) {
 }
 
 strip_random_terms <- function(form) {
-  ftxt <- paste(deparse(form), collapse = "")
+  # Prefer lme4::nobars when available; it reliably removes random-effect terms.
+  if (requireNamespace("lme4", quietly = TRUE)) {
+    return(stats::formula(lme4::nobars(form)))
+  }
+
+  # Fallback regex path.
+  ftxt <- paste(deparse(form), collapse = " ")
   ftxt <- gsub("\\([^\\)]*\\|[^\\)]*\\)", "", ftxt)
   ftxt <- gsub("\\+\\s*\\+", "+", ftxt)
   ftxt <- gsub("~\\s*\\+", "~", ftxt)
-  ftxt <- gsub("\\s+", " ", ftxt)
-  as.formula(ftxt)
+  ftxt <- gsub("\\+\\s*$", "", ftxt)
+  ftxt <- gsub("\\s+", " ", trimws(ftxt))
+
+  if (!grepl("~", ftxt, fixed = TRUE)) {
+    stop(sprintf("strip_random_terms() produced malformed formula text: %s", ftxt), call. = FALSE)
+  }
+
+  stats::as.formula(ftxt)
 }
 
 get_q3_coef_table <- function(m_q3, engine) {
