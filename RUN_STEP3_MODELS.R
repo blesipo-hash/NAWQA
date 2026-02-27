@@ -1,0 +1,7 @@
+source("04_fish_size_TU_models_and_plots.R")
+cat("Step 3 outputs:\n")
+cat("- output/data/event_TU_summary_YYYYMMDD.csv\n")
+cat("- output/data/modeldata_Q1Q2_event_TU_YYYYMMDD.csv\n")
+cat("- output/data/modeldata_Q3_species_event_TU_YYYYMMDD.csv\n")
+cat("- output/results/fish_size_TU_results_YYYYMMDD.txt\n")
+cat("- output/figures/*.png\n")
