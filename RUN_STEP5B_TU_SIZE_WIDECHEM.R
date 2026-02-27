@@ -1,0 +1,7 @@
+source("05b_build_TU_for_fish_size_events_wideChem.R")
+cat("Step 5B outputs:\n")
+cat("- output/data/chemData_wide_shared_panel_for_fishSize_YYYYMMDD.csv\n")
+cat("- output/data/chem_means_for_size_events_widepanel_YYYYMMDD.csv\n")
+cat("- output/data/event_TU_for_size_events_widepanel_YYYYMMDD.csv\n")
+cat("- output/data/modeldata_Q1Q2_event_TU_SIZE_widepanel_YYYYMMDD.csv\n")
+cat("- output/results/TU_size_event_widepanel_QC_YYYYMMDD.txt\n")
