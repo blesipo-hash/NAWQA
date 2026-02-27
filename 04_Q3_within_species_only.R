@@ -195,7 +195,9 @@ pred_curve_lmer <- function(m, dat, xvar = "logTU", grid_n = 200) {
   fit <- as.numeric(predict(m, newdata = nd, re.form = NA, allow.new.levels = TRUE))
 
   # Wald SE using fixed-effect vcov
-  X <- model.matrix(lme4::nobars(formula(m)), nd)
+  # drop response term so model.matrix does not look for outcome column in nd
+  tt <- stats::delete.response(stats::terms(lme4::nobars(formula(m))))
+  X <- model.matrix(tt, nd)
   b <- lme4::fixef(m)
   V <- as.matrix(vcov(m))
 
