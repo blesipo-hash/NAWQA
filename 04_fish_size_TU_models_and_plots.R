@@ -464,7 +464,10 @@ new_q3 <- data.frame(
 )
 
 fixed_form <- strip_random_terms(q3_formula)
-X <- model.matrix(fixed_form, new_q3)
+# model.matrix() should use RHS-only terms to avoid requiring the response in newdata.
+fixed_terms <- terms(fixed_form)
+fixed_terms_rhs <- delete.response(fixed_terms)
+X <- model.matrix(fixed_terms_rhs, new_q3)
 b <- get_q3_fixef(m_q3, q3_model_engine)
 V <- get_q3_vcov(m_q3, q3_model_engine)
 
