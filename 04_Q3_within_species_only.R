@@ -116,11 +116,42 @@ nearest_fill_tu <- function(spec_dt, tu_dt, max_lag_days = 90L) {
 
   out <- merge(
     spec_dt,
-    nearest[, .(row_id__, TU_event, logTU, n_chems_used, n_chem_samples_in_window, tu_lag_days = lag_days)],
+    nearest[, .(
+      row_id__,
+      TU_event_near = TU_event,
+      logTU_near = logTU,
+      n_chems_used_near = n_chems_used,
+      n_chem_samples_in_window_near = n_chem_samples_in_window,
+      tu_lag_days = lag_days
+    )],
     by = "row_id__",
     all.x = TRUE,
     sort = FALSE
   )
+
+  # fill missing TU values from nearest-date candidates without creating .x/.y column conflicts
+  if ("TU_event" %in% names(out)) {
+    out[is.na(TU_event), TU_event := TU_event_near]
+  } else {
+    out[, TU_event := TU_event_near]
+  }
+  if ("logTU" %in% names(out)) {
+    out[is.na(logTU), logTU := logTU_near]
+  } else {
+    out[, logTU := logTU_near]
+  }
+  if ("n_chems_used" %in% names(out)) {
+    out[is.na(n_chems_used), n_chems_used := n_chems_used_near]
+  } else {
+    out[, n_chems_used := n_chems_used_near]
+  }
+  if ("n_chem_samples_in_window" %in% names(out)) {
+    out[is.na(n_chem_samples_in_window), n_chem_samples_in_window := n_chem_samples_in_window_near]
+  } else {
+    out[, n_chem_samples_in_window := n_chem_samples_in_window_near]
+  }
+
+  out[, c("TU_event_near", "logTU_near", "n_chems_used_near", "n_chem_samples_in_window_near") := NULL]
   setorder(out, row_id__)
   out[, row_id__ := NULL]
   out
@@ -259,6 +290,12 @@ tu_keep <- unique(
 )
 
 setkey(tu_keep, SiteNumber, CollectionDate)
+
+# remove TU-like columns from species data so merge never creates logTU.x/logTU.y collisions
+tu_like_cols <- intersect(c("TU_event", "logTU", "n_chems_used", "n_chem_samples_in_window"), names(sp))
+if (length(tu_like_cols)) {
+  sp[, (tu_like_cols) := NULL]
+}
 
 # ---------------------------
 # merge TU onto species-event data
